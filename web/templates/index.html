@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Extractor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <aside class="sidebar" aria-label="Navigation">
+    <button type="button" class="sidebar__menu" aria-label="Menu">
+      <span class="sidebar__menu-icon" aria-hidden="true">☰</span>
+    </button>
+  </aside>
+  <main class="page">
+    <header class="app-header">
+      <div class="download-confirm download-confirm--default" id="download-confirm" role="status">
+        <span class="download-confirm__icon" aria-hidden="true">✓</span>
+        <span class="download-confirm__text">Download ready</span>
+      </div>
+    </header>
+    <div class="center-column">
+      <div class="source-cards">
+        <div class="source-card source-card--youtube">
+          <span class="source-card__label">Youtube links</span>
+          <span class="source-card__arrow" aria-hidden="true">↓</span>
+        </div>
+        <div class="source-card source-card--video">
+          <span class="source-card__label">Video Files</span>
+          <span class="source-card__arrow" aria-hidden="true">↓</span>
+        </div>
+        <div class="source-card source-card--music">
+          <span class="source-card__label">Music files</span>
+          <span class="source-card__arrow" aria-hidden="true">↓</span>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-wrap">
+          <input
+            type="url"
+            id="link-input"
+            class="link-input"
+            placeholder="Insert link"
+            autocomplete="url"
+            enterkeyhint="go"
+          />
+          <p class="input-error" id="input-error" role="alert" aria-live="polite" hidden></p>
+        </div>
+        <label class="upload-box" for="file-input" title="Upload video file to extract audio">
+          <input type="file" id="file-input" class="upload-box__input" accept=".mp4,.m4v,.webm,.mkv,.avi,.mov,.flv,.wmv,.ogv,.3gp,.mpeg,.mpg,.ts,.m2ts" />
+          <svg class="upload-box__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2" y="2" width="44" height="44" rx="6" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="36" cy="12" r="5" fill="currentColor"/>
+            <path d="M2 32 L14 20 L24 28 L34 18 L46 30 L46 46 L2 46 Z" fill="currentColor"/>
+          </svg>
+        </label>
+      </div>
+    </div>
+  </main>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>
