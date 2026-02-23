@@ -1,0 +1,29 @@
+# Virtual environments
+.venv/
+venv/
+audio/
+env/
+
+# Downloaded / generated
+output/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Optional: uncomment if you add env vars later
+# .env
