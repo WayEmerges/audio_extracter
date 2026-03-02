@@ -20,5 +20,6 @@ Step 3: Interactions – add JS to handle URL input, buttons, etc.
 Step 4: API – wire the frontend to the backend and call your extraction logic
 Step 5: Polish – loading state, error handling, final styling tweaks
 Next step
+**Current:** Step 1 & 2 done. `web/` has Flask app + static layout (centered "Insert link" input, modern CSS). Run: `cd web && python app.py` → http://127.0.0.1:5000. Next: Step 3 (interactions), Step 4 (API).
 Design your UI in Figma, export it as an image (or share a screenshot), and send it here.
 From that image, we’ll start with Step 1: folder structure, minimal server, and a blank page that opens in the browser, and go one step at a time from there.

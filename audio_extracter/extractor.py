@@ -1,12 +1,13 @@
 """Audio extraction from video sources."""
 
+import subprocess
 from pathlib import Path
 
 import yt_dlp
 
 from .config import OutputConfig
 from .result import ExtractionResult
-from .sources import LinkVideoSource, VideoSource
+from .sources import FileVideoSource, LinkVideoSource, VideoSource
 
 
 class AudioExtractor:
@@ -22,6 +23,8 @@ class AudioExtractor:
 
         if isinstance(source, LinkVideoSource):
             return self._extract_from_link(source, config)
+        if isinstance(source, FileVideoSource):
+            return self._extract_from_file(source, config)
 
         return ExtractionResult(
             success=False,
@@ -76,6 +79,63 @@ class AudioExtractor:
             return ExtractionResult(
                 success=False,
                 error_message=str(e).split("\n")[0],
+            )
+        except Exception as e:
+            return ExtractionResult(
+                success=False,
+                error_message=str(e),
+            )
+
+    def _extract_from_file(
+        self, source: FileVideoSource, config: OutputConfig
+    ) -> ExtractionResult:
+        """Extract audio from a local video file using ffmpeg."""
+        config.output_dir.mkdir(parents=True, exist_ok=True)
+        src = source.get_source_identifier()
+        stem = Path(src).stem
+        safe_stem = "".join(c for c in stem if c.isalnum() or c in " -_")[:200]
+        output_path = config.output_dir / f"{safe_stem}.{config.format}"
+
+        # ffmpeg codec and quality
+        codec_map = {"mp3": "libmp3lame", "m4a": "aac", "opus": "libopus"}
+        codec = codec_map.get(config.format, "libmp3lame")
+        if config.format == "mp3":
+            quality = ["-q:a", "2"]
+        else:
+            quality = ["-b:a", "128k"]
+
+        try:
+            cmd = [
+                "ffmpeg", "-y", "-i", src, "-vn", "-acodec", codec,
+                *quality,
+                str(output_path),
+            ]
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=600,
+            )
+            if result.returncode != 0:
+                err = (result.stderr or result.stdout or "").strip().split("\n")[-1]
+                return ExtractionResult(
+                    success=False,
+                    error_message=err or "ffmpeg failed",
+                )
+            return ExtractionResult(
+                success=True,
+                output_path=output_path,
+                metadata={"title": safe_stem},
+            )
+        except FileNotFoundError:
+            return ExtractionResult(
+                success=False,
+                error_message="ffmpeg not found. Install ffmpeg to extract from video files.",
+            )
+        except subprocess.TimeoutExpired:
+            return ExtractionResult(
+                success=False,
+                error_message="Extraction timed out",
             )
         except Exception as e:
             return ExtractionResult(
